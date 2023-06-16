@@ -5,10 +5,8 @@
 
 <?php
 
-if (isset($_SESSION['user_role'])) {
-	if ($_SESSION['user_role'] !== 'admin') {
-		redirect('../index.php');
-	}
+if (!isset($_SESSION['user_role'])) {
+	redirect('../index.php');
 }
 
 ?>

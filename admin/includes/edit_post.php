@@ -90,7 +90,11 @@ if (isset($_POST['update_post'])) {
 				$category_id = $row['category_id'];
 				$category_title = $row['category_title'];
 
-				echo "<option value='{$category_id}'>{$category_title}</option>";
+				if ($category_id == $post_category_id) {
+					echo "<option selected value='{$category_id}'>{$category_title}</option>";
+				} else {
+					echo "<option value='{$category_id}'>{$category_title}</option>";
+				}
 			}
 
 			?>
@@ -103,7 +107,6 @@ if (isset($_POST['update_post'])) {
 		<select name='post_user' id='post_category'>
 
 			<?php
-			echo "<option value='{$post_user}'>{$post_user}</option>";
 
 
 			$users_query = "SELECT * FROM users";
@@ -115,7 +118,12 @@ if (isset($_POST['update_post'])) {
 				$user_id = $row['user_id'];
 				$username = $row['username'];
 
-				echo "<option value='{$username}'>{$username}</option>";
+				if ($post_user == $username) {
+					echo "<option selected value='{$username}'>{$username}</option>";
+				} else {
+					echo "<option value='{$username}'>{$username}</option>";
+
+				}
 			}
 
 
@@ -162,13 +170,13 @@ if (isset($_POST['update_post'])) {
 	</div>
 
 	<div class='form-group'>
-		<label for='post_content'>Post content</label>
+		<label for='summernote'>Post content</label>
 		<textarea
-			class='form-control' name='post_content' id='post_content' cols='30'
-			rows='10'><?php echo $post_content ?></textarea>
+			class='form-control' name='post_content' id='summernote' cols='30'
+			rows='10'><?php echo str_replace('\r\n', '</br>', $post_content) ?></textarea>
 	</div>
 
 	<div class='from_group'>
-		<input class='btn btn-primary' type='submit' name='update_post' value='Edit Post'>
+		<input class='btn btn-primary' type='submit' name='update_post' value='Update Post'>
 	</div>
 </form>

@@ -31,7 +31,6 @@
 					echo "<h1>No result!</h1>";
 				} else {
 
-
 					$query = "SELECT * FROM posts";
 					$select_all_posts_query = mysqli_query($connection, $query);
 
