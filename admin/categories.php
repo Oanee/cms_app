@@ -36,7 +36,7 @@
 						<?php
 
 						if (isset($_GET['edit'])) {
-							$category_id = $_GET['edit'];
+							$category_id = escape($_GET['edit']);
 
 							include 'includes/update_category.php';
 						}

@@ -9,7 +9,7 @@ if (isset($_GET['p_id'])) {
 
 	while ($row = mysqli_fetch_assoc($select_post_by_id)) {
 		$post_id = $row['post_id'];
-		$post_author = $row['post_author'];
+		$post_user = $row['post_user'];
 		$post_title = $row['post_title'];
 		$post_category_id = $row['post_category_id'];
 		$post_status = $row['post_status'];
@@ -20,16 +20,16 @@ if (isset($_GET['p_id'])) {
 }
 
 if (isset($_POST['update_post'])) {
-	$post_author = $_POST['post_author'];
-	$post_title = $_POST['post_title'];
-	$post_category_id = $_POST['post_category'];
-	$post_status = $_POST['post_status'];
+	$post_user = escape($_POST['post_user']);
+	$post_title = escape($_POST['post_title']);
+	$post_category_id = escape($_POST['post_category']);
+	$post_status = escape($_POST['post_status']);
 
-	$post_image = $_FILES['image']['name'];
-	$post_image_temp = $_FILES['image']['tmp_name'];
+	$post_image = escape($_FILES['image']['name']);
+	$post_image_temp = escape($_FILES['image']['tmp_name']);
 
-	$post_content = $_POST['post_content'];
-	$post_tags = $_POST['post_tags'];
+	$post_content = escape($_POST['post_content']);
+	$post_tags = escape($_POST['post_tags']);
 
 	move_uploaded_file($post_image_temp, "../images/$post_image");
 
@@ -47,7 +47,7 @@ if (isset($_POST['update_post'])) {
 	UPDATE posts SET 
 		post_category_id = '{$post_category_id}', 
 		post_title = '{$post_title}', 
-		post_author = '{$post_author}', 
+		post_user = '{$post_user}', 
 		post_image = '{$post_image}', 
 		post_content = '{$post_content}', 
 		post_tags = '{$post_tags}', 
@@ -76,8 +76,8 @@ if (isset($_POST['update_post'])) {
 	</div>
 
 	<div class='form-group'>
+		<label for='post_category'>Category</label>
 		<select name='post_category' id='post_category'>
-
 
 			<?php
 
@@ -99,8 +99,29 @@ if (isset($_POST['update_post'])) {
 	</div>
 
 	<div class='form-group'>
-		<label for='post_author'>Post author</label>
-		<input value='<?php echo $post_author ?>' type='text' class='form-control' name='post_author' id='post_author'>
+		<label for='users'>Users</label>
+		<select name='post_user' id='post_category'>
+
+			<?php
+			echo "<option value='{$post_user}'>{$post_user}</option>";
+
+
+			$users_query = "SELECT * FROM users";
+			$select_users = mysqli_query($connection, $users_query);
+
+			confirm($select_users);
+
+			while ($row = mysqli_fetch_assoc($select_users)) {
+				$user_id = $row['user_id'];
+				$username = $row['username'];
+
+				echo "<option value='{$username}'>{$username}</option>";
+			}
+
+
+			?>
+
+		</select>
 	</div>
 
 	<div class='form-group'>

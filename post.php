@@ -14,71 +14,88 @@
 		<div class="col-md-8">
 
 			<?php
-			$the_post_id = $_GET['p_id'];
+			if (isset($_GET['p_id'])) {
+				$the_post_id = escape($_GET['p_id']);
 
-			$query = "SELECT * FROM posts WHERE post_id = $the_post_id";
-			$select_all_posts_query = mysqli_query($connection, $query);
+				$view_query = "UPDATE posts SET post_views_count = post_views_count + 1 WHERE post_id = $the_post_id";
+				$send_query = mysqli_query($connection, $view_query);
 
-			while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
-				$post_id = $row['post_id'];
-				$post_title = $row['post_title'];
-				$post_author = $row['post_author'];
-				$post_date = $row['post_date'];
-				$post_image = $row['post_image'];
-				$post_content = substr($row['post_content'], 0, 100);
+				confirm($send_query);
 
-				?>
+				$query = "SELECT * FROM posts WHERE post_id = $the_post_id";
+				$select_all_posts_query = mysqli_query($connection, $query);
 
-				<h1 class="page-header">
-					Page Heading
-					<small>Secondary Text</small>
-				</h1>
+				while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
+					$post_id = $row['post_id'];
+					$post_title = $row['post_title'];
+					$post_user = $row['post_user'];
+					$post_date = $row['post_date'];
+					$post_image = $row['post_image'];
+					$post_content = substr($row['post_content'], 0, 100);
 
-				<!-- First Blog Post -->
-				<h2>
-					<a href="post.php?p_id=<?php echo $post_id ?>"><?php echo $post_title ?></a>
-				</h2>
+					?>
 
-				<p class="lead">
-					by <a href="index.php"><?php echo $post_author ?></a>
-				</p>
+					<h1 class="page-header">
+						Page Heading
+						<small>Secondary Text</small>
+					</h1>
 
-				<p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date ?></p>
+					<!-- First Blog Post -->
+					<h2>
+						<a href="post.php?p_id=<?php echo $post_id ?>"><?php echo $post_title ?></a>
+					</h2>
 
-				<hr>
+					<p class="lead">
+						by <a href="index.php"><?php echo $post_user ?></a>
+					</p>
 
-				<img class="img-responsive" src="images/<?php echo $post_image ?>" alt="">
+					<p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date ?></p>
 
-				<hr>
+					<hr>
 
-				<p><?php echo $post_content ?></p>
+					<img class="img-responsive" src="images/<?php echo $post_image ?>" alt="">
 
-				<hr>
+					<hr>
 
-			<?php } ?>
+					<p><?php echo $post_content ?></p>
 
+					<hr>
+
+				<?php }
+
+			} else {
+				header('Location: index.php');
+			} ?>
 
 			<?php
 
 			if (isset($_POST['create_comment'])) {
-				$the_post_id = $_GET['p_id'];
 
-				$comment_author = $_POST['comment_author'];
-				$comment_email = $_POST['comment_email'];
-				$comment_content = $_POST['comment_content'];
+				$the_post_id = escape($_GET['p_id']);
 
-				$query = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status)";
+				$comment_author = escape($_POST['comment_author']);
+				$comment_email = escape($_POST['comment_email']);
+				$comment_content = escape($_POST['comment_content']);
 
-				$query .= "VALUES ($the_post_id, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved')";
+				if (!empty($comment_author) && !empty($comment_email) && !empty($comment_content)) {
+					$query = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status)";
 
-				$create_comment_query = mysqli_query($connection, $query);
+					$query .= "VALUES ($the_post_id, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved')";
 
-				confirm($create_comment_query);
+					$create_comment_query = mysqli_query($connection, $query);
 
-				$query = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
-				$query .= "WHERE post_id = $the_post_id ";
-				$update_comments_query = mysqli_query($connection, $query);
-				confirm($update_comments_query);
+					confirm($create_comment_query);
+
+					$query = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
+					$query .= "WHERE post_id = $the_post_id ";
+					$update_comments_query = mysqli_query($connection, $query);
+					confirm($update_comments_query);
+				} else {
+					echo "<script>alert('Fields cannot be empty')</script>";
+				}
+
+				redirect("/cms/post.php?p_id=$the_post_id");
+
 			}
 
 			?>

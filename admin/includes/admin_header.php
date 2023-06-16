@@ -5,10 +5,10 @@
 
 <?php
 
-if(!isset($_SESSION['user_role'])) {
-	header('Location: ../index.php');
-} else {
-
+if (isset($_SESSION['user_role'])) {
+	if ($_SESSION['user_role'] !== 'admin') {
+		redirect('../index.php');
+	}
 }
 
 ?>
@@ -38,6 +38,8 @@ if(!isset($_SESSION['user_role'])) {
 <!--	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">-->
 
 	<link rel='stylesheet' href='css/summernote.css'>
+
+	<link href="css/style.css" rel="stylesheet">
 
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

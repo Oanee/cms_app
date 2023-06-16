@@ -14,14 +14,14 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<h1 class="page-header">
-						Welcome to posts
+						Welcome to Comments
 						<small>Author</small>
 					</h1>
 
 					<?php
 
 					if (isset($_GET['source'])) {
-						$source = $_GET['source'];
+						$source = escape($_GET['source']);
 					} else {
 						$source = '';
 					}
