@@ -1,6 +1,38 @@
 <?php  include "includes/db.php"; ?>
 <?php  include "includes/header.php"; ?>
 
+<?php
+
+if(!isset($_GET['forgot'])) {
+	redirect('index');
+}
+
+if(ifItIsMethod('post')) {
+	if(isset($_POST['email'])) {
+		$email = $_POST['email'];
+
+		$length = 50;
+
+		$token = bin2hex(openssl_random_pseudo_bytes($length));
+
+		if(email_exists($email)) {
+
+			if ($stmt = mysqli_prepare($connection, "UPDATE users SET token = '$token' WHERE user_email = ?")) {
+				mysqli_stmt_bind_param($stmt, "s", $email);
+				mysqli_stmt_execute($stmt);
+				mysqli_stmt_close($stmt);
+
+				echo "<h1 class='text-center'><a href='http://localhost/cms/reset.php?email=$email&token$token'>Press for reset</a></h1>";
+			} else {
+				echo mysqli_error($connection);
+			}
+		} else {
+			echo 'wrong';
+		}
+	}
+}
+
+?>
 
 <!-- Page Content -->
 <div class="container">
@@ -52,4 +84,3 @@
     <?php include "includes/footer.php";?>
 
 </div> <!-- /.container -->
-

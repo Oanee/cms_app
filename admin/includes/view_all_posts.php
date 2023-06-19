@@ -100,11 +100,12 @@ if (isset($_POST['checkBoxArray'])) {
 
 
 			<?php
+			$user = currentUser();
 
-			$query = "SELECT * FROM posts ORDER BY post_id DESC";
+			$query = "SELECT * FROM posts WHERE post_user = '$user' ORDER BY post_id";
 			$select_posts = mysqli_query($connection, $query);
 
-			while ($row = mysqli_fetch_assoc($select_posts)) {
+			while ($row = mysqli_fetch_array($select_posts)) {
 				$post_id = $row['post_id'];
 				$post_author = $row['post_author'];
 				$post_user = $row['post_user'];

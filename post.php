@@ -5,6 +5,48 @@
 
 <?php include 'includes/navigation.php' ?>
 
+<?php
+
+if (isset($_POST['liked'])) {
+
+	$post_id = $_POST['post_id'];
+	$user_id = $_POST['user_id'];
+
+	$searchPost = "SELECT * FROM posts WHERE post_id='$post_id'";
+	$postResult = mysqli_query($connection, $searchPost);
+	$post = mysqli_fetch_array($postResult);
+	$likes = $post['likes'];
+
+	if (mysqli_num_rows($postResult) >= 1) {
+		echo $post['post_id'];
+	}
+
+	mysqli_query($connection, "UPDATE posts SET likes='$likes' + 1 WHERE post_id = '$post_id'");
+
+	mysqli_query($connection, "INSERT INTO likes(user_id, post_id) VALUES($user_id, $post_id)");
+}
+
+if (isset($_POST['unliked'])) {
+
+	$post_id = $_POST['post_id'];
+	$user_id = $_POST['user_id'];
+
+	$searchPost = "SELECT * FROM posts WHERE post_id='$post_id'";
+	$postResult = mysqli_query($connection, $searchPost);
+	$post = mysqli_fetch_array($postResult);
+	$likes = $post['likes'];
+
+	if (mysqli_num_rows($postResult) >= 1) {
+		echo $post['post_id'];
+	}
+
+	mysqli_query($connection, "UPDATE posts SET likes='$likes' - 1 WHERE post_id = '$post_id'");
+
+	mysqli_query($connection, "DELETE FROM likes WHERE user_id = $user_id AND post_id = $post_id");
+}
+
+?>
+
 <!-- Page Content -->
 <div class="container">
 
@@ -65,13 +107,23 @@
 
 						<hr>
 
-						<img class="img-responsive" src="images/<?php echo $post_image ?>" alt="">
+						<img class="img-responsive" src="/cms/images/<?php echo imagePlaceholder($post_image) ?>" alt="">
 
 						<hr>
 
 						<p><?php echo $post_content ?></p>
 
 						<hr>
+
+						<div class='row'>
+							<p class='pull-right'><a class='<?php echo userLikedThisPost($post_id) ? 'unlike' : 'like' ?> glyphicon glyphicon-thumbs-up' href=''><?php echo userLikedThisPost($post_id) ? ' Unlike' : ' Like' ?></a></p>
+						</div>
+
+						<div class='row'>
+							<p class='pull-right'><a>Likes: <?php echo getPostLikes($post_id) ?></a></p>
+						</div>
+
+						<div class='clearfix'></div>
 
 					<?php }
 					?>
@@ -192,3 +244,38 @@
 	<hr>
 
 	<?php include 'includes/footer.php' ?>
+
+	<script>
+
+		$(document).ready(function() {
+
+			var post_id = <?php echo $the_post_id ?>;
+				var user_id = <?php echo loggedInUserId() ?>;
+
+
+			$('.like').click(function () {
+				$.ajax({
+					url: '/cms/post.php?p_id=<?php echo $the_post_id ?>',
+					type: 'post',
+					data: {
+						liked: 1,
+						post_id: post_id,
+						user_id: user_id
+					}
+				})
+			})
+
+			$('.unlike').click(function () {
+				$.ajax({
+					url: '/cms/post.php?p_id=<?php echo $the_post_id ?>',
+					type: 'post',
+					data: {
+						unliked: 1,
+						post_id: post_id,
+						user_id: user_id
+					}
+				})
+			})
+		})
+
+	</script>

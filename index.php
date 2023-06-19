@@ -82,7 +82,7 @@
 					<hr>
 
 					<a href='post.php?p_id=<?php echo $post_id ?>'>
-						<img class="img-responsive" src="/cms/images/<?php echo $post_image ?>" alt="">
+						<img class="img-responsive" src="/cms/images/<?php echo imagePlaceholder($post_image) ?>" alt="">
 					</a>
 
 					<hr>

@@ -13,7 +13,7 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<h1 class="page-header">
-						Welcome to admin <?php echo get_user_name() ?>
+						Welcome to dashboard <?php echo get_user_name() ?>
 					</h1>
 				</div>
 			</div>
@@ -29,7 +29,7 @@
 								</div>
 								<div class="col-xs-9 text-right">
 
-									<div class='huge'><?php echo $post_count = recordCount('posts') ?></div>
+									<div class='huge'><?php echo $post_count = recordCountLimit('posts') ?></div>
 
 									<div>Posts</div>
 								</div>
@@ -53,37 +53,13 @@
 								</div>
 								<div class="col-xs-9 text-right">
 
-									<div class='huge'><?php echo $comment_count = recordCount('comments') ?></div>
+									<div class='huge'><?php echo $comment_count = recordCountLimit('comments') ?></div>
 
 									<div>Comments</div>
 								</div>
 							</div>
 						</div>
 						<a href="comments.php">
-							<div class="panel-footer">
-								<span class="pull-left">View Details</span>
-								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-								<div class="clearfix"></div>
-							</div>
-						</a>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="panel panel-yellow">
-						<div class="panel-heading">
-							<div class="row">
-								<div class="col-xs-3">
-									<i class="fa fa-user fa-5x"></i>
-								</div>
-								<div class="col-xs-9 text-right">
-
-									<div class='huge'><?php echo $user_count = recordCount('users')?></div>
-
-									<div> Users</div>
-								</div>
-							</div>
-						</div>
-						<a href="users.php">
 							<div class="panel-footer">
 								<span class="pull-left">View Details</span>
 								<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -101,7 +77,7 @@
 								</div>
 								<div class="col-xs-9 text-right">
 
-									<div class='huge'><?php echo $category_count = recordCount('category') ?></div>
+									<div class='huge'><?php echo $category_count = recordCountLimit('category') ?></div>
 
 									<div>Categories</div>
 								</div>
@@ -142,8 +118,8 @@
 
 							<?php
 
-							$element_text = ['All posts', 'Active Posts','Draft posts', 'Comments', 'Unapproved comments', 'Users', 'Subscribers', 'Categories'];
-							$element_count = [$post_count, $post_published_count, $post_draft_count, $comment_count, $unapproved_comment_count, $user_count, $subscriber_count, $category_count];
+							$element_text = ['All posts', 'Active Posts','Draft posts', 'Comments', 'Unapproved comments', 'Categories'];
+							$element_count = [$post_count, $post_published_count, $post_draft_count, $comment_count, $unapproved_comment_count, $category_count];
 
 							for($i = 0; $i < count($element_count); $i++) {
 								echo "['{$element_text[$i]}'". ",". "$element_count[$i]],";
